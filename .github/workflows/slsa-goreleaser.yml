@@ -47,7 +47,7 @@ jobs:
           name: ${{ needs.build.outputs.go-binary-name }}
       - uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
         with:
-          name: ${{ needs.build.outputs.go-binary-name }}.intoto.sig
+          name: ${{ needs.build.outputs.go-binary-name }}.intoto.jsonl
       - name: Release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
         if: startsWith(github.ref, 'refs/tags/')
