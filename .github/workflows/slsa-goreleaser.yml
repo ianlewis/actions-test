@@ -12,6 +12,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    uses: ianlewis/slsa-github-generator/.github/workflows/provenance.yml@slsa-gen-lib
+    uses: ianlewis/slsa-github-generator/.github/workflows/provenance.yml@slsa-gen-lib-ianlewis
     with:
       artifacts: "actions-test@somesha"
