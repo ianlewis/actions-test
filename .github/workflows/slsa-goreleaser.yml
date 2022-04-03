@@ -14,4 +14,4 @@ jobs:
       contents: read
     uses: ianlewis/slsa-github-generator/.github/workflows/provenance.yml@slsa-gen-lib-ianlewis
     with:
-      artifacts: "actions-test@somesha"
+      artifacts: "actions-test:2e0390eb024a52963db7b95e84a9c2b12c004054a7bad9a97ec0c7c89d4681d2"
