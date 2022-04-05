@@ -8,10 +8,26 @@ on:
 permissions: read-all
 
 jobs:
+  hash:
+    outputs:
+      digest: ${{ steps.hash.outputs.digest }}
+    runs-on: ubuntu-latest
+      - name: hash
+        shell: bash
+        id: hash
+        run: |
+            set -euo pipefail
+            echo "hoge" > hoge
+            echo "fuga" > fuga
+            DIGEST=$(sha256sum hoge fuga)
+            DIGEST="${DIGEST//'%'/'%25'}"
+            DIGEST="${DIGEST//$'\n'/'%0A'}"
+            DIGEST="${DIGEST//$'\r'/'%0D'}"
+            echo "::set-output name=digest::$DIGEST"
   provenance:
     permissions:
       id-token: write
       contents: read
-    uses: ianlewis/slsa-github-generator/.github/workflows/provenance.yml@slsa-gen-lib-ianlewis
+    uses: ianlewis/slsa-github-generator/.github/workflows/provenance.yml@slsa-gen-lib
     with:
-      artifacts: "actions-test:2e0390eb024a52963db7b95e84a9c2b12c004054a7bad9a97ec0c7c89d4681d2"
+      subjects: "${{ jobs.hash.outputs.digest }}"
