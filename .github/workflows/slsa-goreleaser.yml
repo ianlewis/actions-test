@@ -26,9 +26,10 @@ jobs:
           DIGEST="${DIGEST//$'\r'/'%0D'}"
           echo "::set-output name=digest::$DIGEST"
   provenance:
+    needs: [hash]
     permissions:
       id-token: write
       contents: read
     uses: ianlewis/slsa-github-generator/.github/workflows/provenance.yml@slsa-gen-lib-ianlewis
     with:
-      subjects: "${{ jobs.hash.outputs.digest }}"
+      subjects: "${{ needs.hash.outputs.digest }}"
