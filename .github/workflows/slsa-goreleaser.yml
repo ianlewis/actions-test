@@ -12,18 +12,19 @@ jobs:
     outputs:
       digest: ${{ steps.hash.outputs.digest }}
     runs-on: ubuntu-latest
+    steps:
       - name: hash
         shell: bash
         id: hash
         run: |
-            set -euo pipefail
-            echo "hoge" > hoge
-            echo "fuga" > fuga
-            DIGEST=$(sha256sum hoge fuga)
-            DIGEST="${DIGEST//'%'/'%25'}"
-            DIGEST="${DIGEST//$'\n'/'%0A'}"
-            DIGEST="${DIGEST//$'\r'/'%0D'}"
-            echo "::set-output name=digest::$DIGEST"
+          set -euo pipefail
+          echo "hoge" > hoge
+          echo "fuga" > fuga
+          DIGEST=$(sha256sum hoge fuga)
+          DIGEST="${DIGEST//'%'/'%25'}"
+          DIGEST="${DIGEST//$'\n'/'%0A'}"
+          DIGEST="${DIGEST//$'\r'/'%0D'}"
+          echo "::set-output name=digest::$DIGEST"
   provenance:
     permissions:
       id-token: write
