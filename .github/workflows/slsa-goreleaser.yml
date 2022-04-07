@@ -36,6 +36,13 @@ jobs:
           DIGEST="${DIGEST//$'\n'/'%0A'}"
           DIGEST="${DIGEST//$'\r'/'%0D'}"
           echo "::set-output name=digest::$DIGEST"
+      - name: Upload the artifact
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v2.3.1
+        with:
+          name: "actions-test"
+          path: "actions-test"
+          if-no-files-found: error
+          retention-days: 5
   provenance:
     needs: [build]
     permissions:
