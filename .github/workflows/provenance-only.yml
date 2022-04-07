@@ -1,9 +1,6 @@
-name: SLSA provenance
+name: SLSA provenance-only
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "*"
 
 permissions: read-all
 
