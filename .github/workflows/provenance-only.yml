@@ -45,6 +45,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    uses: slsa-framework/slsa-github-generator/.github/workflows/provenance.yml@main
+    uses: ianlewis/slsa-github-generator/.github/workflows/provenance.yml@audience-ianlewis
     with:
       subjects: "${{ needs.build.outputs.digest }}"
