@@ -18,7 +18,7 @@ jobs:
       id-token: write
       contents: read
     needs: checkout
-    # uses: ianlewis/slsa-github-generator-go/.github/workflows/builder.yml@library
-    uses: slsa-framework/slsa-github-generator-go/.github/workflows/builder.yml@main
+    uses: ianlewis/slsa-github-generator-go/.github/workflows/builder.yml@library
+    # uses: slsa-framework/slsa-github-generator-go/.github/workflows/builder.yml@main
     with:
       go-version: 1.18
