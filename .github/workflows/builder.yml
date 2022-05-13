@@ -1,4 +1,4 @@
-name: build w/ SLSA provenance
+name: SLSA
 on:
   workflow_dispatch:
 

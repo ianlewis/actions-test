@@ -1,4 +1,4 @@
-name: SLSA provenance-only
+name: SLSA
 on:
   workflow_dispatch:
 
