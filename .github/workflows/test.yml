@@ -12,12 +12,12 @@ jobs:
       contents: read
       actions: read
     steps:
-      - uses: actions/checkout@v3
-        with:
-          repository: slsa-framework/slsa-github-generator
-          ref: 8d0cdc6af66f20f62b5a58df634077cb421b68fd
+      # - uses: actions/checkout@v3
+      #   with:
+      #     repository: slsa-framework/slsa-github-generator
+      #     ref: 8d0cdc6af66f20f62b5a58df634077cb421b68fd
       - id: detectenv
-        uses: slsa-framework/slsa-github-generator/.github/actions/detect-env@8d0cdc6af66f20f62b5a58df634077cb421b68fd
+        uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow@8d0cdc6af66f20f62b5a58df634077cb421b68fd
       - id: print
         shell: bash
         env:
