@@ -1,0 +1,23 @@
+name: detect env
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  detect:
+    permissions:
+      id-token: write
+      contents: read
+      actions: read
+    steps:
+      - id: detectenv
+        uses: ianlewis/slsa-github-generator/.github/actions/detect-env@8d0cdc6af66f20f62b5a58df634077cb421b68fd
+      - id: print
+        shell: bash
+        env:
+          REPO: "${{ steps.detectenv.outputs.repository }}"
+          REF: "${{ steps.detectenv.outputs.ref }}"
+        run: |
+          echo $REPO
+          echo $REF
