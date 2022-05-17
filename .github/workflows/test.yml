@@ -17,7 +17,8 @@ jobs:
       #     repository: slsa-framework/slsa-github-generator
       #     ref: 8d0cdc6af66f20f62b5a58df634077cb421b68fd
       - id: detectenv
-        uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow@8d0cdc6af66f20f62b5a58df634077cb421b68fd
+        # uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow@8d0cdc6af66f20f62b5a58df634077cb421b68fd
+        uses: ianlewis/slsa-github-generator/.github/actions/detect-workflow@fix-detect-workflow
       - id: print
         shell: bash
         env:
