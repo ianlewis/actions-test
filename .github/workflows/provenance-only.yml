@@ -40,12 +40,22 @@ jobs:
           path: "actions-test"
           if-no-files-found: error
           retention-days: 5
+
   provenance:
     needs: [build]
     permissions:
       id-token: write
       contents: read
       actions: read
-    uses: ianlewis/slsa-github-generator/.github/workflows/slsa2_provenance.yml@entrypoint
+    uses: ianlewis/slsa-github-generator/.github/workflows/slsa2_provenance.yml@prov-only-presubmit
     with:
       subjects: "${{ needs.build.outputs.digest }}"
+
+  output:
+    needs: [provenance]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          PROVENANCE: ${{ needs.provenance.outputs.signed-provenance-name }}
+        run: |
+          echo "provname: $PROVENANCE"
