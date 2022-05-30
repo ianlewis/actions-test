@@ -56,6 +56,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env:
-          PROVENANCE: ${{ needs.provenance.outputs.signed-provenance-name }}
+          PROVENANCE: ${{ needs.provenance.outputs.attestation-name }}
         run: |
           echo "provname: $PROVENANCE"
