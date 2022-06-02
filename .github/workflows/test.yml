@@ -7,25 +7,31 @@ on:
 permissions: read-all
 
 jobs:
-  detect:
-    runs-on: ubuntu-latest
+  # detect:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #     actions: read
+  #   steps:
+  #     # - uses: actions/checkout@v3
+  #     #   with:
+  #     #     repository: slsa-framework/slsa-github-generator
+  #     #     ref: 8d0cdc6af66f20f62b5a58df634077cb421b68fd
+  #     - id: detectenv
+  #       # uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow@8d0cdc6af66f20f62b5a58df634077cb421b68fd
+  #       uses: ianlewis/slsa-github-generator/.github/actions/detect-workflow@detect-workflow-ghcontext
+  #     - id: print
+  #       shell: bash
+  #       env:
+  #         REPO: "${{ steps.detectenv.outputs.repository }}"
+  #         REF: "${{ steps.detectenv.outputs.ref }}"
+  #       run: |
+  #         echo $REPO
+  #         echo $REF
+  test:
     permissions:
       id-token: write
       contents: read
       actions: read
-    steps:
-      # - uses: actions/checkout@v3
-      #   with:
-      #     repository: slsa-framework/slsa-github-generator
-      #     ref: 8d0cdc6af66f20f62b5a58df634077cb421b68fd
-      - id: detectenv
-        # uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow@8d0cdc6af66f20f62b5a58df634077cb421b68fd
-        uses: ianlewis/slsa-github-generator/.github/actions/detect-workflow@detect-workflow-ghcontext
-      - id: print
-        shell: bash
-        env:
-          REPO: "${{ steps.detectenv.outputs.repository }}"
-          REF: "${{ steps.detectenv.outputs.ref }}"
-        run: |
-          echo $REPO
-          echo $REF
+    uses: ianlewis/slsa-github-generator/.github/workflows/event-path-test.yml@test-event-path
