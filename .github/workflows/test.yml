@@ -1,6 +1,8 @@
 name: detect env
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
 
 permissions: read-all
 
@@ -18,7 +20,7 @@ jobs:
       #     ref: 8d0cdc6af66f20f62b5a58df634077cb421b68fd
       - id: detectenv
         # uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow@8d0cdc6af66f20f62b5a58df634077cb421b68fd
-        uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow@aec5cd1e20507a6f1b5d8e82a8f62c3e2ca9b9f9
+        uses: ianlewis/slsa-github-generator/.github/actions/detect-workflow@detect-workflow-ghcontext
       - id: print
         shell: bash
         env:
