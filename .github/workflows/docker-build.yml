@@ -5,7 +5,7 @@ name: Docker Build
 permissions: read-all
 
 jobs:
-  test:
+  build:
     permissions:
       id-token: write
       contents: read
