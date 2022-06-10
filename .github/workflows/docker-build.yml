@@ -15,4 +15,4 @@ jobs:
     with:
       tags: "ghcr.io/ianlewis/actions-test:${{ github.ref_name }}-${{ github.sha }}"
     secrets:
-      github_token: ${{ secrets.PACKAGES_TOKEN }}
+      personal_access_token: ${{ secrets.PACKAGES_TOKEN }}
