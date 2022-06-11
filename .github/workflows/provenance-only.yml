@@ -28,10 +28,7 @@ jobs:
         id: hash
         run: |
           set -euo pipefail
-          DIGEST=$(sha256sum actions-test)
-          DIGEST="${DIGEST//'%'/'%25'}"
-          DIGEST="${DIGEST//$'\n'/'%0A'}"
-          DIGEST="${DIGEST//$'\r'/'%0D'}"
+          DIGEST=$(sha256sum actions-test | base64 -w0)
           echo "::set-output name=digest::$DIGEST"
       - name: Upload the artifact
         uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v2.3.1
@@ -47,9 +44,9 @@ jobs:
       id-token: write
       contents: read
       actions: read
-    uses: ianlewis/slsa-github-generator/.github/workflows/slsa2_provenance.yml@prov-only-presubmit
+    uses: slsa-framework/slsa-github-generator/.github/workflows/slsa2_provenance.yml@v1.0.0
     with:
-      subjects: "${{ needs.build.outputs.digest }}"
+      base64-subjects: "${{ needs.build.outputs.digest }}"
 
   output:
     needs: [provenance]
