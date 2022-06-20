@@ -12,6 +12,9 @@ flags:
 goos: linux # same values as GOOS env variable.
 goarch: amd64 # same values as GOARCH env variable.
 
+# Working directory.
+dir: go/
+
 # Binary name.
 # {{ .OS }} will be replaced by goos field in the config file.
 # {{ .Arch }} will be replaced by goarch field in the config file.
