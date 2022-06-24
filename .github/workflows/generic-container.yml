@@ -57,10 +57,11 @@ jobs:
         env:
           SHA: ${{ steps.build.outputs.digest }}
         run: |
-          # sha256sum generates sha256 hash for all artifacts.
-          # base64 -w0 encodes to base64 and outputs on a single line.
-          # sha256sum artifact1 artifact2 ... | base64 -w0
+          # sha output of docker/build-push-action is of the form 'sha256:<digest>'
           sha=$(echo $SHA | cut -d':' -f2)
+
+          # Here we emulate the output of sha256sum and base64 encode it.
+          # base64 -w0 encodes to base64 and outputs on a single line.
           digest=$(echo "$sha  $IMAGE_NAME" | base64 -w0)
           echo "::set-output name=digest::$digest"
           echo "::set-output name=sha::$HASH"
