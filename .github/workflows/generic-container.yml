@@ -12,8 +12,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  # This step builds our artifacts, uploads them to the workflow run, and
-  # outputs their digest.
+  # This step builds our image, pushes it, and outputs the repo hash digest.
   build:
     permissions:
       contents: read
@@ -78,6 +77,7 @@ jobs:
     with:
       base64-subjects: "${{ needs.build.outputs.digest }}"
 
+  # This step attaches the provenance to the image in the container registry.
   upload:
     needs: [build, provenance]
     runs-on: ubuntu-latest
