@@ -19,6 +19,7 @@ jobs:
       contents: read
       packages: write
     outputs:
+      tag: ${{ steps.meta.output.tags }}
       digest: ${{ steps.hash.outputs.digest }}
       sha: ${{ steps.hash.outputs.sha }}
     runs-on: ubuntu-latest
@@ -89,8 +90,6 @@ jobs:
       - uses: sigstore/cosign-installer@main
         with:
           cosign-release: "v1.9.0" # optional
-      - name: Pull image
-        run: docker pull $IMAGE_NAME@sha256:${{needs.build.outputs.sha}}
       - name: Download provenance
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # v2.1.0
         with:
@@ -98,4 +97,7 @@ jobs:
           # our provenance.
           name: ${{needs.provenance.outputs.attestation-name}}
       - name: Upload provenance
-        run: cosign upload blob -f ${{needs.provenance.outputs.attestation-name}} $IMAGE_NAME@sha256:${{needs.build.outputs.sha}}
+        env:
+          PROV_NAME: ${{needs.provenance.outputs.attestation-name}}
+          IMAGE_TAG: ${{needs.build.outputs.tag}}
+        run: cosign upload blob -f $PROV_NAME $IMAGE_TAG
