@@ -1,4 +1,4 @@
-name: Container build
+name: Generic container
 on:
   workflow_dispatch:
   push:
@@ -8,7 +8,8 @@ on:
 permissions: read-all
 
 env:
-  IMAGE_NAME: ghcr.io/ianlewis/actions-test
+  IMAGE_REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   # This step builds our artifacts, uploads them to the workflow run, and
@@ -24,25 +25,42 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6 # v2.0.0
+
       - name: Authenticate Docker
-        env:
-          GH_TOKEN: "${{ github.token }}"
-        run: echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-      - name: "build image"
-        run: docker build -t $IMAGE_NAME:${{ github.ref_name }}-${{ github.sha }} .
-        working-directory: go
-      - name: "push image"
-        run: docker push $IMAGE_NAME:${{ github.ref_name }}-${{ github.sha }}
-      - name: "generate hash"
-        shell: bash
+        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # v2.0.0
+        with:
+          registry: ${{ env.IMAGE_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a # v4.0.1
+        with:
+          images: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8 # v3.0.0
+        id: build
+        with:
+          context: go/
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Output digest
         id: hash
+        env:
+          SHA: ${{ steps.build.outputs.digest }}
         run: |
           # sha256sum generates sha256 hash for all artifacts.
           # base64 -w0 encodes to base64 and outputs on a single line.
           # sha256sum artifact1 artifact2 ... | base64 -w0
-          HASH=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE)
-          DIGEST="$HASH  $IMAGE_NAME"
-          echo "::set-output name=digest::$DIGEST"
+          digest="$SHA  $IMAGE_NAME"
+          echo "::set-output name=digest::$digest"
           echo "::set-output name=sha::$HASH"
 
   # This step calls the generic workflow to generate provenance.
@@ -72,7 +90,7 @@ jobs:
         with:
           cosign-release: "v1.9.0" # optional
       - name: Pull image
-        run: docker pull $IMAGE_NAME:sha256:${{needs.build.outputs.sha}}
+        run: docker pull $IMAGE_NAME@sha256:${{needs.build.outputs.sha}}
       - name: Download provenance
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # v2.1.0
         with:
@@ -80,4 +98,4 @@ jobs:
           # our provenance.
           name: ${{needs.provenance.outputs.attestation-name}}
       - name: Upload provenance
-        run: cosign upload blob -f ${{needs.provenance.outputs.attestation-name}} $IMAGE_NAME:${{ github.ref_name }}-${{ github.sha }}
+        run: cosign upload blob -f ${{needs.provenance.outputs.attestation-name}} $IMAGE_NAME@sha256:${{needs.build.outputs.sha}}
