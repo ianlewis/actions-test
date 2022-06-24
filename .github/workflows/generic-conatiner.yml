@@ -1,4 +1,4 @@
-name: SLSA provenance only
+name: Container build
 on:
   workflow_dispatch:
   push:
