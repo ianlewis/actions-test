@@ -19,7 +19,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-      tag: ${{ steps.meta.output.tags }}
+      tag: ${{ steps.meta.outputs.tags }}
       digest: ${{ steps.hash.outputs.digest }}
       sha: ${{ steps.hash.outputs.sha }}
     runs-on: ubuntu-latest
