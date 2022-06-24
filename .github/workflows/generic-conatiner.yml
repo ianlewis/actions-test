@@ -15,6 +15,7 @@ jobs:
   # outputs their digest.
   build:
     permissions:
+      contents: read
       packages: write
     outputs:
       digest: ${{ steps.hash.outputs.digest }}
