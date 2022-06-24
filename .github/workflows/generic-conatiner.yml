@@ -21,12 +21,18 @@ jobs:
       sha: ${{ steps.hash.outputs.sha }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the repository
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
       - name: Authenticate Docker
         env:
           GH_TOKEN: "${{ github.token }}"
         run: echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
       - name: "build image"
         run: docker build -t $IMAGE_NAME:${{ github.ref_name }}-${{ github.sha }} .
+        working-directory: go
       - name: "push image"
         run: docker push $IMAGE_NAME:${{ github.ref_name }}-${{ github.sha }}
       - name: "generate hash"
@@ -67,7 +73,6 @@ jobs:
       - uses: sigstore/cosign-installer@main
         with:
           cosign-release: "v1.9.0" # optional
-
       - name: Pull image
         run: docker pull $IMAGE_NAME:sha256:${{needs.build.outputs.sha}}
       - name: Download provenance
