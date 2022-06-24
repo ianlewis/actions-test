@@ -1,0 +1,80 @@
+name: SLSA provenance only
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
+
+permissions: read-all
+
+env:
+  IMAGE_NAME: ghcr.io/ianlewis/actions-test
+
+jobs:
+  # This step builds our artifacts, uploads them to the workflow run, and
+  # outputs their digest.
+  build:
+    permissions:
+      packages: write
+    outputs:
+      digest: ${{ steps.hash.outputs.digest }}
+      sha: ${{ steps.hash.outputs.sha }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate Docker
+        env:
+          GH_TOKEN: "${{ github.token }}"
+        run: echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+      - name: "build image"
+        run: docker build -t $IMAGE_NAME:${{ github.ref_name }}-${{ github.sha }} .
+      - name: "push image"
+        run: docker push $IMAGE_NAME:${{ github.ref_name }}-${{ github.sha }}
+      - name: "generate hash"
+        shell: bash
+        id: hash
+        run: |
+          # sha256sum generates sha256 hash for all artifacts.
+          # base64 -w0 encodes to base64 and outputs on a single line.
+          # sha256sum artifact1 artifact2 ... | base64 -w0
+          HASH=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE)
+          DIGEST="$HASH  $IMAGE_NAME"
+          echo "::set-output name=digest::$DIGEST"
+          echo "::set-output name=sha::$HASH"
+
+  # This step calls the generic workflow to generate provenance.
+  provenance:
+    needs: [build]
+    permissions:
+      actions: read
+      id-token: write
+      contents: read
+    if: startsWith(github.ref, 'refs/tags/')
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.1
+    with:
+      base64-subjects: "${{ needs.build.outputs.digest }}"
+
+  upload:
+    needs: [build, provenance]
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      # - name: Authenticate Docker
+      #   env:
+      #     GH_TOKEN: "${{ github.token }}"
+      #   run: echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+      - uses: sigstore/cosign-installer@main
+        with:
+          cosign-release: "v1.9.0" # optional
+
+      - name: Pull image
+        run: docker pull $IMAGE_NAME:sha256:${{needs.build.outputs.sha}}
+      - name: Download provenance
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # v2.1.0
+        with:
+          # The provenance step returns an output with the artifact name of
+          # our provenance.
+          name: ${{needs.provenance.outputs.attestation-name}}
+      - name: Upload provenance
+        run: cosign upload blob -f ${{needs.provenance.outputs.attestation-name}} $IMAGE_NAME:${{ github.ref_name }}-${{ github.sha }}
