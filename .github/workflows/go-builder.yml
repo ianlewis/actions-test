@@ -1,9 +1,6 @@
 name: SLSA builder Go
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "*"
 
 permissions: read-all
 
