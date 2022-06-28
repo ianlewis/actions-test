@@ -43,7 +43,7 @@ jobs:
           if-no-files-found: error
           retention-days: 5
 
-  # This step calls the generic workflow to generate provenance.
+  # This step calls the generic workflow to generate provenance and uploads it to a release.
   provenance:
     needs: [build]
     permissions:
@@ -51,11 +51,12 @@ jobs:
       id-token: write
       contents: read
     if: startsWith(github.ref, 'refs/tags/')
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    # uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    uses: ianlewis/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@generic-release
     with:
       base64-subjects: "${{ needs.build.outputs.digest }}"
 
-  # This step creates a GitHub release with our artifacts and provenance.
+  # This step uploads our artifacts to the GitHub release.
   release:
     needs: [build, provenance]
     runs-on: ubuntu-latest
@@ -71,16 +72,9 @@ jobs:
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # v2.1.0
         with:
           name: artifact2
-      - name: Download provenance
-        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # v2.1.0
-        with:
-          # The provenance step returns an output with the artifact name of
-          # our provenance.
-          name: ${{needs.provenance.outputs.attestation-name}}
-      - name: Create release
+      - name: Upload to release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # v0.1.14
         with:
           files: |
             artifact1
             artifact2
-            ${{needs.provenance.outputs.attestation-name}}
