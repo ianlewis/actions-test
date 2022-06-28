@@ -55,6 +55,7 @@ jobs:
     uses: ianlewis/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@generic-release
     with:
       base64-subjects: "${{ needs.build.outputs.digest }}"
+      compile-generator: true
 
   # This step uploads our artifacts to the GitHub release.
   release:
