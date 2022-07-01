@@ -53,7 +53,7 @@ jobs:
       - name: Output digest
         id: hash
         env:
-          IMAGE_TAGS: ${{ steps.build.outputs.tags }}
+          IMAGE_TAGS: ${{ steps.meta.outputs.tags }}
           SHA: ${{ steps.build.outputs.digest }}
         run: |
           # sha output of docker/build-push-action is of the form 'sha256:<digest>'
