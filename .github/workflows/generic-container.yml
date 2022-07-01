@@ -77,6 +77,6 @@ jobs:
       # TODO: should this use the sha instead of the tag?
       image: ${{ needs.build.outputs.tag }}
       registry-username: ${{ github.actor }}
-      compile-builder: true
+      compile-generator: true
     secrets:
       registry-password: ${{ secrets.GITHUB_TOKEN }}
