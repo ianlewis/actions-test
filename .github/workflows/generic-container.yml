@@ -60,7 +60,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     uses: ianlewis/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@409-feature-add-generic-container-workflow
     with:
-      image: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}"
+      image: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}
       digest: ${{ needs.build.outputs.digest }}
       registry-username: ${{ github.actor }}
       compile-generator: true
