@@ -18,7 +18,6 @@ jobs:
       contents: read
       packages: write
     outputs:
-      image: ${{ steps.image.outputs.image }}
       digest: ${{ steps.build.outputs.digest }}
     runs-on: ubuntu-latest
     steps:
@@ -50,16 +49,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Output image
-        id: image
-        run: |
-          # NOTE: We need to use the image and digest in order to make sure
-          # that the image we attest has not been modified.
-          # NOTE: The digest output from docker/build-push-action is of the
-          # form "sha256:<digest>"
-          image_name="${IMAGE_REGISTRY}/${IMAGE_NAME}"
-          echo "::set-output name=image::$image_name"
-
   # This step calls the generic workflow to generate provenance.
   provenance:
     needs: [build]
@@ -71,7 +60,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     uses: ianlewis/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@409-feature-add-generic-container-workflow
     with:
-      image: ${{ needs.build.outputs.image }}
+      image: "${IMAGE_REGISTRY}/${IMAGE_NAME}"
       digest: ${{ needs.build.outputs.digest }}
       registry-username: ${{ github.actor }}
       compile-generator: true
