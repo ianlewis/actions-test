@@ -41,7 +41,7 @@ jobs:
           GIT_REF: ${{ github.ref }}
         run: |
           tag=$(echo ${GIT_REF} | cut -d'/' -f3)  # get tag name without tags/refs/ prefix.
-          echo "${KO_PASSWORD}" | ko login https://ghcr.io --username "$KO_USER" --password-stdin
+          echo "${KO_PASSWORD}" | ko login ghcr.io --username "$KO_USER" --password-stdin
           ko build --tags="${tag}" .
 
       - name: Output image
