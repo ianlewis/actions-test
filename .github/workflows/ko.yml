@@ -41,9 +41,16 @@ jobs:
           KO_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GIT_REF: ${{ github.ref }}
         run: |
-          tag=$(echo ${GIT_REF} | cut -d'/' -f3)  # get tag name without tags/refs/ prefix.
+          # get tag name without tags/refs/ prefix.
+          tag=$(echo ${GIT_REF} | cut -d'/' -f3)
+
+          # Log into regisry
           echo "${KO_PASSWORD}" | ko login ghcr.io --username "$KO_USER" --password-stdin
+
+          # Build & push the image. Save the image name.
           image_and_digest=$(ko build --tags="${tag}" .)
+
+          # Output the image name and digest so we can generate provenance.
           image=$(echo "${image_and_digest}" | cut -d':' -f1
           digest=$(echo "${image_and_digest}" | cut -d'@' -f2
           echo "::set-output name=image::$image"
