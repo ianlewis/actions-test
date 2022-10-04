@@ -33,6 +33,7 @@ jobs:
         uses: imjasonh/setup-ko@v0.6
 
       - name: Build and push Docker image
+        id: build
         working-directory: go
         env:
           KO_DOCKER_REPO: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}"
@@ -42,7 +43,8 @@ jobs:
         run: |
           tag=$(echo ${GIT_REF} | cut -d'/' -f3)  # get tag name without tags/refs/ prefix.
           echo "${KO_PASSWORD}" | ko login ghcr.io --username "$KO_USER" --password-stdin
-          ko build --tags="${tag}" .
+          digest=$(ko build --tags="${tag}" . | cut -d'@' -f2)
+          echo "::set-output name=digest::$digest"
 
       - name: Output image
         id: image
