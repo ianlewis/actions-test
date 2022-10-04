@@ -1,4 +1,4 @@
-name: Generic container
+name: Ko build
 on:
   workflow_dispatch:
   push:
