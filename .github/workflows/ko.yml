@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
 
       - name: Set up ko
-        uses: imjasonh/setup-ko@v0.4
+        uses: imjasonh/setup-ko@v0.6
 
       - name: Authenticate Docker
         uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # v2.0.0
