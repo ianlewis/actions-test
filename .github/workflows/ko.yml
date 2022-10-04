@@ -18,7 +18,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-      image: ${{ steps.image.outputs.image }}
+      image: ${{ steps.build.outputs.image }}
       digest: ${{ steps.build.outputs.digest }}
     runs-on: ubuntu-latest
     steps:
@@ -43,18 +43,11 @@ jobs:
         run: |
           tag=$(echo ${GIT_REF} | cut -d'/' -f3)  # get tag name without tags/refs/ prefix.
           echo "${KO_PASSWORD}" | ko login ghcr.io --username "$KO_USER" --password-stdin
-          digest=$(ko build --tags="${tag}" . | cut -d'@' -f2)
+          image_and_digest=$(ko build --tags="${tag}" .)
+          image=$(echo "${image_and_digest}" | cut -d':' -f1
+          digest=$(echo "${image_and_digest}" | cut -d'@' -f2
+          echo "::set-output name=image::$image"
           echo "::set-output name=digest::$digest"
-
-      - name: Output image
-        id: image
-        run: |
-          # NOTE: We need to use the image and digest in order to make sure
-          # that the image we attest has not been modified.
-          # NOTE: The digest output from docker/build-push-action is of the
-          # form "sha256:<digest>"
-          image_name="${IMAGE_REGISTRY}/${IMAGE_NAME}"
-          echo "::set-output name=image::$image_name"
 
   # This step calls the generic workflow to generate provenance.
   provenance:
