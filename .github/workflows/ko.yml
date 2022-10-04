@@ -45,8 +45,10 @@ jobs:
         working-directory: go
         env:
           KO_DOCKER_REPO: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}"
+          KO_TAGS: ${{ steps.meta.outputs.tags }}
+          KO_LABELS: ${{ steps.meta.outputs.labels }}
         run: |
-          ko build .
+          ko build --tags="${KO_TAGS}" --image-label="${KO_LABELS}" .
 
       - name: Output image
         id: image
