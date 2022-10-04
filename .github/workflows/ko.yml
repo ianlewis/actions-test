@@ -25,30 +25,24 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
 
+      - uses: actions/setup-go@v3.3.0
+        with:
+          go-version: 1.19
+
       - name: Set up ko
         uses: imjasonh/setup-ko@v0.6
-
-      - name: Authenticate Docker
-        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # v2.0.0
-        with:
-          registry: ${{ env.IMAGE_REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a # v4.0.1
-        with:
-          images: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
         working-directory: go
         env:
           KO_DOCKER_REPO: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}"
-          KO_TAGS: ${{ steps.meta.outputs.tags }}
-          KO_LABELS: ${{ steps.meta.outputs.labels }}
+          KO_USER: ${{ github.actor }}
+          KO_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          GIT_REF: ${{ github.ref }}
         run: |
-          ko build --tags="$(echo \"${KO_TAGS}\" | cut -d':' -f2)" --image-label="${KO_LABELS}" .
+          tag=$(echo ${GIT_REF} | cut -d'/' -f3)  # get tag name without tags/refs/ prefix.
+          echo "${KO_PASSWORD}" | ko login https://ghcr.io --username "$KO_USER" --password-stdin
+          ko build --tags="${tag}" .
 
       - name: Output image
         id: image
