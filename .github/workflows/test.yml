@@ -13,6 +13,3 @@ jobs:
       actions: read
     steps:
       - uses: ianlewis/slsa-github-generator/.github/actions/secure-checkout@secure-checkout-shell
-        with:
-          repository: slsa-framework/slsa-github-generator
-          sha: 8d0cdc6af66f20f62b5a58df634077cb421b68fd
