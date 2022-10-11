@@ -32,7 +32,7 @@ jobs:
       - name: Set up ko
         uses: imjasonh/setup-ko@v0.6
 
-      - name: Build and push Docker image
+      - name: Run ko
         id: build
         working-directory: go
         env:

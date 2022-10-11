@@ -1,4 +1,4 @@
-name: detect env
+name: test
 on:
   workflow_dispatch:
 
