@@ -5,7 +5,7 @@ on:
 permissions: read-all
 
 jobs:
-  detect:
+  test:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
