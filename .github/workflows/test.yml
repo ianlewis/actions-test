@@ -12,10 +12,13 @@ jobs:
       contents: read
       actions: read
     steps:
-      # - uses: ianlewis/slsa-github-generator/.github/actions/secure-checkout@secure-checkout-ref
-      - uses: ianlewis/slsa-github-generator/.github/actions/checkout-go@checkout-ref
+      - uses: ianlewis/slsa-github-generator/.github/actions/secure-checkout@secure-checkout-ref
         with:
-          go-version: 1.19
-      - uses: ianlewis/slsa-github-generator/.github/actions/checkout-node@checkout-ref
-        with:
-          go-version: 1.19
+          repository: ${{ github.repository }}
+          ref: "refs/tags/v0.0.51"
+      # - uses: ianlewis/slsa-github-generator/.github/actions/checkout-go@checkout-ref
+      #   with:
+      #     go-version: 1.19
+      # - uses: ianlewis/slsa-github-generator/.github/actions/checkout-node@checkout-ref
+      #   with:
+      #     go-version: 1.19
