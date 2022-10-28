@@ -54,7 +54,8 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.1
     with:
       base64-subjects: "${{ needs.build.outputs.digest }}"
-      compile-generator: true
+      # compile-generator: true
+    continue-on-error: true
 
   # This step uploads our artifacts to the GitHub release.
   release:
