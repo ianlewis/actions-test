@@ -77,4 +77,4 @@ jobs:
       registry-username: ${{ github.actor }}
       compile-generator: true
     secrets:
-      registry-password: ${{ secrets.GITHUB_TOKEN }}
+      registry-password: ${{ secrets.PACKAGES_TOKEN }}
