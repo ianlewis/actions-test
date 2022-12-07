@@ -8,10 +8,10 @@ on:
 permissions: read-all
 
 env:
-  # IMAGE_REGISTRY: ghcr.io
-  # IMAGE_NAME: ${{ github.repository }}
-  IMAGE_REGISTRY: asia-northeast1-docker.pkg.dev
-  IMAGE_NAME: annular-hexagon-340305/test/test
+  IMAGE_REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  # IMAGE_REGISTRY: asia-northeast1-docker.pkg.dev
+  # IMAGE_NAME: annular-hexagon-340305/test/test
 
 jobs:
   # This step builds our image, pushes it, and outputs the repo hash digest.
