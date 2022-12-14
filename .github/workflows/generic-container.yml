@@ -83,4 +83,5 @@ jobs:
     secrets:
       # registry-password: ${{ secrets.GCR_TOKEN }}
       # registry-password: ${{ secrets.PACKAGES_TOKEN }}
-      registry-password: ${{ secrets.GITHUB_TOKEN }}
+      # registry-password: ${{ secrets.GITHUB_TOKE }}
+      registry-password: "sometoken"
