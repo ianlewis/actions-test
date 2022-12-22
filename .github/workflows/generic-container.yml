@@ -35,8 +35,8 @@ jobs:
         with:
           registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ github.actor }}
-          # password: ${{ secrets.GITHUB_TOKEN }}
-          password: "sometoken"
+          password: ${{ secrets.GITHUB_TOKEN }}
+          # password: "sometoken"
           # username: "oauth2accesstoken"
           # password: ${{ secrets.GCR_TOKEN }}
       - name: Extract metadata (tags, labels) for Docker
