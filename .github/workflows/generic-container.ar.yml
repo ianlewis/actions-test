@@ -1,0 +1,78 @@
+name: Generic container (AR)
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
+
+permissions: read-all
+
+env:
+  IMAGE_REGISTRY: asia-northeast1-docker.pkg.dev
+  IMAGE_NAME: annular-hexagon-340305/test/test
+
+jobs:
+  # This step builds our image, pushes it, and outputs the repo hash digest.
+  build:
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+      digest: ${{ steps.build.outputs.digest }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6 # v2.0.0
+
+      - name: Authenticate Docker
+        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # v2.0.0
+        with:
+          username: "oauth2accesstoken"
+          password: ${{ secrets.GCR_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a # v4.0.1
+        with:
+          images: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8 # v3.0.0
+        id: build
+        with:
+          context: go/
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Output image
+        id: image
+        run: |
+          # NOTE: We need to use the image and digest in order to make sure
+          # that the image we attest has not been modified.
+          # NOTE: The digest output from docker/build-push-action is of the
+          # form "sha256:<digest>"
+          image_name="${IMAGE_REGISTRY}/${IMAGE_NAME}"
+          echo "::set-output name=image::$image_name"
+
+  # This step calls the generic workflow to generate provenance.
+  provenance:
+    needs: [build]
+    permissions:
+      actions: read
+      id-token: write
+      contents: read
+      packages: write
+    if: startsWith(github.ref, 'refs/tags/')
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v1.4.0
+    # uses: ianlewis/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@repository-username-secret
+    with:
+      image: ${{ needs.build.outputs.image }}
+      digest: ${{ needs.build.outputs.digest }}
+      registry-username: "oauth2accesstoken"
+      compile-generator: true
+    secrets:
+      registry-password: ${{ secrets.GCR_TOKEN }}
