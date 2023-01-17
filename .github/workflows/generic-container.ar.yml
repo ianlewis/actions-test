@@ -14,14 +14,11 @@ env:
   PROVIDER_NAME: projects/757631193791/locations/global/workloadIdentityPools/actions-test/providers/github
 
 jobs:
-  # This step builds our image, pushes it, and outputs the repo hash digest.
-  build:
+  auth:
     permissions:
       contents: read
-      packages: write
+      id-token: write
     outputs:
-      image: ${{ steps.image.outputs.image }}
-      digest: ${{ steps.build.outputs.digest }}
       access_token: ${{ steps.auth.outputs.access_token }}
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +30,17 @@ jobs:
           service_account: ${{ env.SERVICE_ACCOUNT }}
           workload_identity_provider: ${{ env.PROVIDER_NAME }}
 
+  # This step builds our image, pushes it, and outputs the repo hash digest.
+  build:
+    needs: [auth]
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+      digest: ${{ steps.build.outputs.digest }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout the repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
 
@@ -44,7 +52,7 @@ jobs:
         with:
           registry: ${{ env.IMAGE_REGISTRY }}
           username: "oauth2accesstoken"
-          password: ${{ steps.auth.outputs.access_token }}
+          password: ${{ needs.auth.outputs.access_token }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -73,7 +81,7 @@ jobs:
 
   # This step calls the generic workflow to generate provenance.
   provenance:
-    needs: [build]
+    needs: [auth, build]
     permissions:
       actions: read
       id-token: write
@@ -86,4 +94,4 @@ jobs:
       digest: ${{ needs.build.outputs.digest }}
       registry-username: "oauth2accesstoken"
     secrets:
-      registry-password: ${{ needs.build.outputs.access_token }}
+      registry-password: ${{ needs.auth.outputs.access_token }}
