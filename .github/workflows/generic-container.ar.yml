@@ -31,6 +31,7 @@ jobs:
       - name: Authenticate Docker
         uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # v2.0.0
         with:
+          registry: ${{ env.IMAGE_REGISTRY }}
           username: "oauth2accesstoken"
           password: ${{ secrets.GCR_TOKEN }}
       - name: Extract metadata (tags, labels) for Docker
