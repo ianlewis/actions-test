@@ -1,9 +1,9 @@
 name: Ko build
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "*"
+  # push:
+  #   tags:
+  #     - "*"
 
 permissions: read-all
 
