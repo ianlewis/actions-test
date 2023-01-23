@@ -91,3 +91,4 @@ jobs:
       digest: ${{ needs.build.outputs.digest }}
       gcp-service-account: ${{ needs.build.outputs.service_account }}
       gcp-workload-identity-provider: ${{ needs.build.outputs.provider_name }}
+      compile-generator: true
