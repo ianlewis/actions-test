@@ -76,7 +76,7 @@ jobs:
 
   # This step calls the generic workflow to generate provenance.
   provenance:
-    needs: [auth, build]
+    needs: [build]
     permissions:
       actions: read
       id-token: write
