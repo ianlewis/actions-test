@@ -14,22 +14,6 @@ env:
   PROVIDER_NAME: projects/757631193791/locations/global/workloadIdentityPools/actions-test/providers/github
 
 jobs:
-  auth:
-    permissions:
-      contents: read
-      id-token: write
-    outputs:
-      access_token: ${{ steps.auth.outputs.access_token }}
-    runs-on: ubuntu-latest
-    steps:
-      - id: "auth"
-        name: "Authenticate to Google Cloud"
-        uses: google-github-actions/auth@ef5d53e30bbcd8d0836f4288f5e50ff3e086997d # v1.0.0
-        with:
-          token_format: "access_token"
-          service_account: ${{ env.SERVICE_ACCOUNT }}
-          workload_identity_provider: ${{ env.PROVIDER_NAME }}
-
   # This step builds our image, pushes it, and outputs the repo hash digest.
   build:
     needs: [auth]
@@ -39,8 +23,18 @@ jobs:
     outputs:
       image: ${{ steps.image.outputs.image }}
       digest: ${{ steps.build.outputs.digest }}
+      service_account: ${{ steps.image.outputs.service_account }}
+      provider_name: ${{ steps.image.outputs.provider_name }}
     runs-on: ubuntu-latest
     steps:
+      - id: auth
+        name: "Authenticate to Google Cloud"
+        uses: google-github-actions/auth@ef5d53e30bbcd8d0836f4288f5e50ff3e086997d # v1.0.0
+        with:
+          token_format: "access_token"
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.PROVIDER_NAME }}
+
       - name: Checkout the repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v2.3.4
 
@@ -52,7 +46,7 @@ jobs:
         with:
           registry: ${{ env.IMAGE_REGISTRY }}
           username: "oauth2accesstoken"
-          password: ${{ needs.auth.outputs.access_token }}
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -78,6 +72,8 @@ jobs:
           # form "sha256:<digest>"
           image_name="${IMAGE_REGISTRY}/${IMAGE_NAME}"
           echo "::set-output name=image::$image_name"
+          echo "::set-output name=service_account::${SERVICE_ACCOUNT}"
+          echo "::set-output name=provider_name::${PROVIDER_NAME}"
 
   # This step calls the generic workflow to generate provenance.
   provenance:
@@ -88,10 +84,10 @@ jobs:
       contents: read
       packages: write
     if: startsWith(github.ref, 'refs/tags/')
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v1.4.0
+    # uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v1.4.0
+    uses: ianlewis/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@gcp-workload-identity
     with:
       image: ${{ needs.build.outputs.image }}
       digest: ${{ needs.build.outputs.digest }}
-      registry-username: "oauth2accesstoken"
-    secrets:
-      registry-password: ${{ needs.auth.outputs.access_token }}
+      gcp-service-account: ${{ needs.build.outputs.service_account }}
+      gcp-workload-identity-provider: ${{ needs.build.outputs.provider_name }}
