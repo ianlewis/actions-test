@@ -16,7 +16,6 @@ env:
 jobs:
   # This step builds our image, pushes it, and outputs the repo hash digest.
   build:
-    needs: [auth]
     permissions:
       contents: read
       packages: write
