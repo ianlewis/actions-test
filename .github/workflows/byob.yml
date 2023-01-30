@@ -1,0 +1,21 @@
+name: Generic container
+on:
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - "*"
+
+permissions: read-all
+
+jobs:
+  build:
+    permissions:
+      id-token: write
+      # actions: read
+      contents: read
+      packages: write
+    uses: ianlewis/slsa-byob-template/.github/workflows/slsa3.yml@main
+    with:
+      message: "Hello World!"
+      file: hello.txt
+      # version: v0.0.2
