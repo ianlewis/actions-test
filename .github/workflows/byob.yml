@@ -10,10 +10,10 @@ permissions: read-all
 jobs:
   build:
     permissions:
-      id-token: write
+      id-token: write # For signing
       # actions: read
-      contents: read
-      packages: write
+      contents: write # For asset uploads
+      packages: write # To write to github packages
     uses: ianlewis/slsa-byob-template/.github/workflows/slsa3.yml@main
     with:
       message: "Hello World!"
