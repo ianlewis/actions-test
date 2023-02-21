@@ -1,0 +1,37 @@
+{
+  "name": "@ianlewis/byob-test",
+  "version": "0.0.7",
+  "description": "Predicate type declarations and helpers",
+  "keywords": [],
+  "author": "Ian Lewis",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "ci": "npm ci",
+    "build": "tsc",
+    "format": "prettier --write '**/*.ts'",
+    "format-check": "prettier --check '**/*.ts'",
+    "package": "ncc build --source-map",
+    "lint": "eslint src/**/*.ts",
+    "all": "npm ci && npm run format && npm run lint && npm run build && npm run package",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianlewis/byob-test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ianlewis/byob-test/issues"
+  },
+  "homepage": "https://github.com/ianlewis/byob-test#readme",
+  "dependencies": {
+    "@ianlewis/byob-test": "file:ianlewis-byob-test-0.0.7.tgz"
+  }
+}
