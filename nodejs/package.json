@@ -30,8 +30,5 @@
   "bugs": {
     "url": "https://github.com/ianlewis/byob-test/issues"
   },
-  "homepage": "https://github.com/ianlewis/byob-test#readme",
-  "dependencies": {
-    "@ianlewis/byob-test": "file:ianlewis-byob-test-0.0.7.tgz"
-  }
+  "homepage": "https://github.com/ianlewis/byob-test#readme"
 }
