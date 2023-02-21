@@ -1,7 +1,7 @@
 {
-  "name": "@ianlewis/byob-test",
+  "name": "@ianlewis/actions-test",
   "version": "0.1.17",
-  "description": "Predicate type declarations and helpers",
+  "description": "SLSA test for Node.js",
   "keywords": [],
   "author": "Ian Lewis",
   "main": "dist/index.js",
