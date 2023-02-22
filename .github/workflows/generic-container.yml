@@ -1,9 +1,9 @@
 name: Generic container
 on:
   workflow_dispatch:
-  # push:
-  #   tags:
-  #     - "*"
+  push:
+    tags:
+      - "*"
 
 permissions: read-all
 
