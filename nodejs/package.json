@@ -25,10 +25,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ianlewis/byob-test.git"
+    "url": "git+https://github.com/ianlewis/actions-test.git"
   },
   "bugs": {
-    "url": "https://github.com/ianlewis/byob-test/issues"
+    "url": "https://github.com/ianlewis/actions-test/issues"
   },
-  "homepage": "https://github.com/ianlewis/byob-test#readme"
+  "homepage": "https://github.com/ianlewis/actions-test#readme"
 }
