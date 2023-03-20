@@ -19,3 +19,5 @@ jobs:
       directory: nodejs
       node-version: 16
       run-scripts: "build"
+    secrets:
+      node-auth-token: ${{ secrets.NPM_TOKEN }}
