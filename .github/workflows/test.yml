@@ -19,7 +19,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: my-artifact
-          path: /usr/bin
+          path: /usr/lib
       # - uses: ianlewis/slsa-github-generator/.github/actions/secure-checkout@secure-checkout-token
       #   with:
       #     repository: ${{ github.repository }}
