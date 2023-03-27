@@ -18,7 +18,7 @@ jobs:
     with:
       directory: nodejs
       node-version: 16
-      run-scripts: "build"
+      run-scripts: "ci build"
       access: public
       dist-tag: foo
     secrets:
