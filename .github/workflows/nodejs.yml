@@ -14,7 +14,7 @@ jobs:
       # actions: read
       contents: write # For asset uploads
       packages: write # To write to github packages
-    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@1900-bug-dont-validate-or-read-event_path-from-slsa-token
+    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@nodejs-upload-release
     with:
       directory: nodejs
       node-version: 16
