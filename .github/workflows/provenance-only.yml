@@ -51,11 +51,12 @@ jobs:
       id-token: write
       contents: write
     if: startsWith(github.ref, 'refs/tags/')
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.2
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.5.0
     with:
       base64-subjects: "${{ needs.build.outputs.digest }}"
       upload-assets: true
-      # compile-generator: true
+      upload-tag-name: v99
+      compile-generator: true
 
   # This step uploads our artifacts to the GitHub release.
   release:
