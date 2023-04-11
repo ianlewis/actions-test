@@ -2,8 +2,8 @@ name: Node.js
 on:
   workflow_dispatch:
     push:
-    tags:
-      - "*"
+      tags:
+        - "*"
 
 permissions: read-all
 
