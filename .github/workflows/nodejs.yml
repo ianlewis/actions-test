@@ -11,10 +11,8 @@ jobs:
   build:
     permissions:
       id-token: write # For signing
-      # actions: read
-      contents: write # For asset uploads
-      packages: write # To write to github packages
-    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@nodejs-remove-publish
+      contents: read # For repo checkout.
+    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@low-perms-delegator
     with:
       directory: nodejs
       node-version: 16
