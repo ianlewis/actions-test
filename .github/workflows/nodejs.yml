@@ -18,6 +18,7 @@ jobs:
       directory: nodejs
       node-version: 16
       run-scripts: "ci, build"
+      rekor-log-public: true
     secrets:
       node-auth-token: ${{ secrets.NPM_TOKEN }}
 
