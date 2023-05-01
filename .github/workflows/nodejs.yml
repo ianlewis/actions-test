@@ -13,8 +13,8 @@ jobs:
       id-token: write # For signing
       contents: read # For repo checkout.
       actions: read # For getting workflow run info.
-    # uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@low-perms-delegator
-    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@main
+    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@slsa-npm-fork
+    # uses: slsa-framework/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@main
     with:
       directory: nodejs
       node-version: 16
