@@ -10,6 +10,7 @@ runs:
   using: "composite"
   steps:
     - name: "Print inputs"
+      shell: bash
       env:
         FOO: ${{ inputs.foo }}
         BAR: ${{ inputs.bar }}
