@@ -8,7 +8,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - shell: node
+      - shell: "node {0}"
         id: inputs
         run: |
           import * as fs from 'fs'
