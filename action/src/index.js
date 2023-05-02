@@ -1,7 +1,7 @@
 function run() {
-  let foo = env.INPUT_FOO;
-  let bar = env.INPUT_BAR;
-  let hoge = env.INPUT_HOGE;
+  let foo = process.env.INPUT_FOO;
+  let bar = process.env.INPUT_BAR;
+  let hoge = process.env.INPUT_HOGE;
 
   console.log(`foo: ${foo}`);
   console.log(`bar: ${bar}`);
