@@ -1,9 +1,7 @@
-import * as core from "@actions/core";
-
 function run() {
-  let foo = core.getInput("foo");
-  let bar = core.getInput("bar");
-  let hoge = core.getInput("hoge");
+  let foo = env.INPUT_FOO;
+  let bar = env.INPUT_BAR;
+  let hoge = env.INPUT_HOGE;
 
   console.log(`foo: ${foo}`);
   console.log(`bar: ${bar}`);
