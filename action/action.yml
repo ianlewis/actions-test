@@ -7,15 +7,5 @@ inputs:
   bar: # change this
     required: false
 runs:
-  using: "composite"
-  steps:
-    - name: "Print inputs"
-      shell: bash
-      env:
-        FOO: ${{ inputs.foo }}
-        BAR: ${{ inputs.bar }}
-        HOGE: ${{ inputs.hoge }}
-      run: |
-        echo "foo: ${FOO}"
-        echo "bar: ${BAR}"
-        echo "hoge: ${HOGE}"
+  using: "node16"
+  main: "src/index.js"
