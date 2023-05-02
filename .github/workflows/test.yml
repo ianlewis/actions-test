@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - shell: node
+        id: inputs
         run: |
           import * as fs from 'fs'
           import * as os from 'os'
@@ -16,11 +17,11 @@ jobs:
           let x = { foo: "bar" }
           let outValue = JSON.stringify(x)
 
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, `action-inputs=${outValue}${os.EOL}`, {
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `inputs=${outValue}${os.EOL}`, {
             encoding: 'utf8'
           })
       - uses: ./action
         with:
-          foo: ${{ fromJSON(x).foo }}
-          bar: ${{ fromJSON(x).bar }}
-          hoge: ${{ fromJSON(x).hoge }}
+          foo: ${{ fromJSON(steps.inputs.outputs.inputs).foo }}
+          bar: ${{ fromJSON(steps.inputs.outputs.inputs).bar }}
+          hoge: ${{ fromJSON(steps.inputs.outputs.inputs).hoge }}
