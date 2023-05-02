@@ -21,6 +21,6 @@ jobs:
           })
       - uses: ./action
         with:
-          foo: ${{ x.foo }}
-          bar: ${{ x.bar }}
-          hoge: ${{ x.hoge }}
+          foo: ${{ fromJSON(x).foo }}
+          bar: ${{ fromJSON(x).bar }}
+          hoge: ${{ fromJSON(x).hoge }}
