@@ -7,27 +7,14 @@ permissions: read-all
 jobs:
   test:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-      actions: read
     steps:
-      - uses: actions/upload-artifact@v3
+      - shell: node
+        run: |
+          let x = {
+            foo: "bar",
+          }
+      - uses: ./action
         with:
-          name: my-artifact
-          path: /usr/bin/bash
-      - uses: actions/download-artifact@v3
-        with:
-          name: my-artifact
-          path: /usr/lib
-      # - uses: ianlewis/slsa-github-generator/.github/actions/secure-checkout@secure-checkout-token
-      #   with:
-      #     repository: ${{ github.repository }}
-      #     # ref: "refs/tags/v0.0.51"
-      #     ref: "d93464a6db102eda2ffb9fa3a76bfd67f55fe532"
-      # - uses: ianlewis/slsa-github-generator/.github/actions/checkout-go@checkout-ref
-      #   with:
-      #     go-version: 1.19
-      # - uses: ianlewis/slsa-github-generator/.github/actions/checkout-node@checkout-ref
-      #   with:
-      #     go-version: 1.19
+          foo: ${{ x.foo }}
+          bar: ${{ x.bar }}
+          hoge: ${{ x.hoge }}
