@@ -31,9 +31,11 @@ jobs:
           access: public
           node-auth-token: ${{ secrets.NPM_TOKEN }}
           package-name: ${{ needs.build.package-name }}
-          package-sha256: ${{ needs.build.package-sha256 }}
+          package-download-name: ${{ needs.build.package-download-name }}
+          package-download-sha256: ${{ needs.build.package-download-sha256 }}
           provenance-name: ${{ needs.build.provenance-name }}
-          provenance-sha256: ${{ needs.build.provenance-sha256 }}
+          provenance-download-name: ${{ needs.build.provenance-download-name }}
+          provenance-download-sha256: ${{ needs.build.provenance-download-sha256 }}
 
       - name: Print outputs
         shell: bash
