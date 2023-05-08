@@ -24,6 +24,12 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Node environment
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+
       - name: publish
         id: publish
         uses: ianlewis/slsa-github-generator/actions/nodejs/publish@npm-publish-refactor
