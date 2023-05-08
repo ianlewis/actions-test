@@ -13,22 +13,34 @@ jobs:
       id-token: write # For signing
       contents: read # For repo checkout.
       actions: read # For getting workflow run info.
-    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@slsa-npm-fork
-    # uses: slsa-framework/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@main
+    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@npm-publish-refactor
     with:
       directory: nodejs
       node-version: 16
       run-scripts: "ci, build"
       rekor-log-public: true
     secrets:
-      node-auth-token: ${{ secrets.NPM_TOKEN }}
 
-  print-outputs:
+  publish:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
+      - name: publish
+        id: publish
+        uses: ianlewis/slsa-github-generator/actions/nodejs/publish@npm-publish-refactor
+        with:
+          access: public
+          node-auth-token: ${{ secrets.NPM_TOKEN }}
+          package-name: ${{ needs.build.package-name }}
+          package-sha256: ${{ needs.build.package-sha256 }}
+          provenance-name: ${{ needs.build.provenance-name }}
+          provenance-sha256: ${{ needs.build.provenance-sha256 }}
+
       - name: Print outputs
         shell: bash
         env:
-          OUTPUTS: "${{ toJSON(needs.build.outputs) }}"
-        run: echo "${OUTPUTS}"
+          BUILD_OUTPUTS: "${{ toJSON(needs.build.outputs) }}"
+          PUBLISH_OUTPUTS: "${{ toJSON(steps.publish.outputs) }}"
+        run: |
+          echo "build:   ${BUILD_OUTPUTS}"
+          echo "publish: ${PUBLISH_OUTPUTS}"
