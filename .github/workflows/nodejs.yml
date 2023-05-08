@@ -19,7 +19,6 @@ jobs:
       node-version: 16
       run-scripts: "ci, build"
       rekor-log-public: true
-    secrets:
 
   publish:
     needs: [build]
