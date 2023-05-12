@@ -1,0 +1,30 @@
+name: Node.js
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
+
+permissions: read-all
+
+jobs:
+  build:
+    permissions:
+      id-token: write # For signing
+      contents: read # For repo checkout.
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - id: update-npm
+        shell: bash
+        run: |
+          npm install -g npm@latest
+      - working-directory: nodejs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm ci
+          npm run build
+          npm publish --provenance
