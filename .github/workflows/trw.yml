@@ -26,7 +26,25 @@ on:
         default: ""
 
 jobs:
+  commit:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - id: commit
+        run: |
+          cd action
+          npm version patch
+          git commit --all --no-edit || true
+          git push
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
   slsa-setup:
+    needs: [commit]
     permissions:
       id-token: write # For token creation.
     outputs:
@@ -42,6 +60,7 @@ jobs:
           slsa-build-action-path: "./action"
           slsa-version: "v0.2"
           slsa-workflow-inputs: ${{ toJson(inputs) }}
+          slsa-checkout-sha1: ${{ needs.commit.outputs.sha }}
 
   slsa-run:
     needs: [slsa-setup]
