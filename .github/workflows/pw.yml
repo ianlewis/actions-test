@@ -23,6 +23,6 @@ jobs:
   build:
     permissions:
       id-token: write # For signing.
-      contents: read # For repo checkout of private repos.
+      contents: write # For repo checkout of private repos.
       actions: read # For getting workflow run on private repos.
     uses: ianlewis/actions-test/.github/workflows/trw.yml@main

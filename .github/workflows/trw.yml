@@ -28,6 +28,8 @@ on:
 jobs:
   commit:
     runs-on: ubuntu-latest
+    permissions:
+      content: write
     outputs:
       sha: ${{ steps.commit.outputs.sha }}
     steps:
