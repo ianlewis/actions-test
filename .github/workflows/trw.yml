@@ -18,6 +18,7 @@ permissions: {}
 
 on:
   workflow_call:
+    inputs:
 
 jobs:
   slsa-setup:
