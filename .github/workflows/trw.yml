@@ -39,6 +39,8 @@ jobs:
         run: |
           cd action
           npm version patch
+          git config --global user.email "npm-cli+bot@github.com"
+          git config --global user.name "npm CLI robot"
           git commit --all -m "Update version" || true
           git push
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
