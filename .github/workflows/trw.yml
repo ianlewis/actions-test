@@ -1,0 +1,48 @@
+# Copyright 2023 SLSA Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: TRW test
+
+permissions: {}
+
+on:
+  workflow_call:
+
+jobs:
+  slsa-setup:
+    permissions:
+      id-token: write # For token creation.
+    outputs:
+      slsa-token: ${{ steps.generate.outputs.slsa-token }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate the token
+        id: generate
+        uses: slsa-framework/slsa-github-generator/actions/delegator/setup-token@v1.6.0
+        with:
+          slsa-workflow-recipient: "delegator_lowperms-generic_slsa3.yml"
+          slsa-runner-label: "ubuntu-latest"
+          slsa-build-action-path: "./action"
+          slsa-version: "v0.2"
+          slsa-workflow-inputs: ${{ toJson(inputs) }}
+
+  slsa-run:
+    needs: [slsa-setup]
+    permissions:
+      id-token: write # For signing.
+      contents: read # For repo checkout of private repos.
+      actions: read # For getting workflow run on private repos.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_lowperms-generic_slsa3.yml@v1.6.0
+    with:
+      slsa-token: ${{ needs.slsa-setup.outputs.slsa-token }}
