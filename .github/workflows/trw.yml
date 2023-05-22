@@ -39,7 +39,7 @@ jobs:
         run: |
           cd action
           npm version patch
-          git commit --all --no-edit || true
+          git commit --all -m "Update version" || true
           git push
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
