@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
-import "fs";
+import * as crypto from "crypto";
+import * as fs from "fs";
 
 function run() {
   const path = core.getInput("slsa-layout-file");
