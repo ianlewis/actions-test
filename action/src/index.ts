@@ -3,7 +3,7 @@ import * as core from "@actions/core";
 import * as crypto from "crypto";
 import * as fs from "fs";
 
-function run() {
+async function run() {
   // Write and upload the artifact file.
   const filename = "foo";
   const filedata = "somedata";
@@ -13,7 +13,8 @@ function run() {
   const artifactClient = artifact.create();
   const uploadResponse = await artifactClient.uploadArtifact(
     filename, // artifact name
-    filename // file name
+    [filename], // file name
+    "."
   );
 
   if (uploadResponse.failedItems.length > 0) {
