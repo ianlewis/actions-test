@@ -13,7 +13,6 @@ jobs:
       id-token: write # For signing
       contents: read # For repo checkout.
       actions: read # For getting workflow run info.
-    # uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@npm-publish-refactor
     uses: slsa-framework/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@v1.6.0
     with:
       directory: nodejs
@@ -33,7 +32,8 @@ jobs:
 
       - name: publish
         id: publish
-        uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.6.0
+        # uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.6.0
+        uses: ianlewis/slsa-github-generator/actions/nodejs/publish@test-npm-package-path
         with:
           access: public
           node-auth-token: ${{ secrets.NPM_TOKEN }}
