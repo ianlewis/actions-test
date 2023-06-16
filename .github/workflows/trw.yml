@@ -48,7 +48,7 @@ jobs:
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
   slsa-setup:
-    # needs: [commit]
+    needs: [commit]
     permissions:
       id-token: write # For token creation.
     outputs:
