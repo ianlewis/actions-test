@@ -26,26 +26,26 @@ on:
         default: ""
 
 jobs:
-  # commit:
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: write
-  #   outputs:
-  #     sha: ${{ steps.commit.outputs.sha }}
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - id: commit
-  #       run: |
-  #         cd action
-  #         npm version patch
-  #         git config --global user.email "npm-cli+bot@github.com"
-  #         git config --global user.name "npm CLI robot"
-  #         git commit --all -m "Update version" || true
-  #         git push
-  #         echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+  commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - id: commit
+        run: |
+          cd action
+          npm version patch
+          git config --global user.email "npm-cli+bot@github.com"
+          git config --global user.name "npm CLI robot"
+          git commit --all -m "Update version" || true
+          git push
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
   slsa-setup:
     # needs: [commit]
@@ -57,14 +57,14 @@ jobs:
     steps:
       - name: Generate the token
         id: generate
-        uses: slsa-framework/slsa-github-generator/actions/delegator/setup-token@v1.6.0
+        uses: slsa-framework/slsa-github-generator/actions/delegator/setup-generic@v1.7.0
         with:
           slsa-workflow-recipient: "delegator_lowperms-generic_slsa3.yml"
           slsa-runner-label: "ubuntu-latest"
           slsa-build-action-path: "./action"
           slsa-version: "v0.2"
           slsa-workflow-inputs: ${{ toJson(inputs) }}
-          # slsa-checkout-sha1: ${{ needs.commit.outputs.sha }}
+          slsa-checkout-sha1: ${{ needs.commit.outputs.sha }}
 
   slsa-run:
     needs: [slsa-setup]
@@ -72,6 +72,6 @@ jobs:
       id-token: write # For signing.
       contents: read # For repo checkout of private repos.
       actions: read # For getting workflow run on private repos.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_lowperms-generic_slsa3.yml@v1.6.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_lowperms-generic_slsa3.yml@v1.7.0
     with:
       slsa-token: ${{ needs.slsa-setup.outputs.slsa-token }}
