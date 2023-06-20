@@ -1,9 +1,9 @@
 name: Node.js
 on:
   workflow_dispatch:
-  # push:
-  #   tags:
-  #     - "*"
+  push:
+    tags:
+      - "*"
 
 permissions: read-all
 
@@ -14,7 +14,6 @@ jobs:
       contents: read # For repo checkout.
       actions: read # For getting workflow run info.
     uses: slsa-framework/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@v1.7.0
-    # uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@npm-upstream
     with:
       directory: nodejs
       node-version: 16
@@ -31,10 +30,17 @@ jobs:
           node-version: 18
           registry-url: "https://registry.npmjs.org"
 
+      - name: download
+        id: download
+        uses: ianlewis/slsa-github-generator/actions/nodejs/secure-package-download@secure-package-download
+        with:
+          name: ${{ needs.build.outputs.package-download-name }}
+          path: ${{ needs.build.outputs.package-name }}
+          sha256: ${{ needs.build.outputs.package-download-sha256 }}
+
       - name: publish
         id: publish
-        # uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.6.0
-        uses: ianlewis/slsa-github-generator/actions/nodejs/publish@npm-upstream
+        uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.7.0
         with:
           access: public
           node-auth-token: ${{ secrets.NPM_TOKEN }}
