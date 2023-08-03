@@ -1,6 +1,6 @@
 {
   "name": "@ianlewis/actions-test",
-  "version": "0.1.153",
+  "version": "0.1.154",
   "description": "SLSA test for Node.js",
   "keywords": [],
   "author": "Ian Lewis",
