@@ -48,10 +48,10 @@ jobs:
 
       - name: Publish the package
         env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           TARBALL_PATH: "${{ needs.build.outputs.package-name }}"
           PROVENANCE_PATH: "./attestations/${{ needs.build.outputs.provenance-name }}"
         run: |
-          ls
           npm publish "${TARBALL_PATH}" --access=public --provenance-file="${PROVENANCE_PATH}"
 
       # - name: publish
