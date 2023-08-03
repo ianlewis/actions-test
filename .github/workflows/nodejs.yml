@@ -34,22 +34,22 @@ jobs:
         # uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-package-download@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
         uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-package-download@v1.8.0-rc.2
         with:
-          name: ${{ needs.provenance.outputs.package-download-name }}
-          path: "package"
-          sha256: ${{ needs.provenance.outputs.package-download-sha256 }}
+          name: ${{ needs.build.outputs.package-download-name }}
+          path: "package.tgz"
+          sha256: ${{ needs.build.outputs.package-download-sha256 }}
 
       - name: Download provenance
         # uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
         uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@v1.8.0-rc.2
         with:
-          name: ${{ needs.provenance.outputs.provenance-download-name }}
+          name: ${{ needs.build.outputs.provenance-download-name }}
           path: "attestations"
-          sha256: ${{ needs.provenance.outputs.provenance-download-sha256 }}
+          sha256: ${{ needs.build.outputs.provenance-download-sha256 }}
 
       - name: Publish the package
         env:
-          TARBALL_PATH: "./package/${{ needs.provenance.outputs.package-name }}"
-          PROVENANCE_PATH: "./attestations/${{ needs.provenance.outputs.provenance-name }}"
+          TARBALL_PATH: "./package/${{ needs.build.outputs.package-name }}"
+          PROVENANCE_PATH: "./attestations/${{ needs.build.outputs.provenance-name }}"
         run: |
           ls
           npm publish "${TARBALL_PATH}" --access=public --provenance-file="${PROVENANCE_PATH}"
