@@ -31,8 +31,8 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Download tarball
-        # uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-download-package@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
-        uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-download-package@main
+        # uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-package-download@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
+        uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-package-download@v1.8.0-rc.2
         with:
           name: ${{ needs.provenance.outputs.package-download-name }}
           path: "."
@@ -40,7 +40,7 @@ jobs:
 
       - name: Download provenance
         # uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
-        uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@main
+        uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@v1.8.0-rc.2
         with:
           name: ${{ needs.provenance.outputs.provenance-download-name }}
           path: "."
