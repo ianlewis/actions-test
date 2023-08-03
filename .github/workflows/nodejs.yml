@@ -31,24 +31,46 @@ jobs:
           node-version: 18
           registry-url: "https://registry.npmjs.org"
 
-      - name: publish
-        id: publish
-        uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.7.0
+      - name: Download tarball
+        uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-download-package@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
         with:
-          access: public
-          node-auth-token: ${{ secrets.NPM_TOKEN }}
-          package-name: ${{ needs.build.outputs.package-name }}
-          package-download-name: ${{ needs.build.outputs.package-download-name }}
-          package-download-sha256: ${{ needs.build.outputs.package-download-sha256 }}
-          provenance-name: ${{ needs.build.outputs.provenance-name }}
-          provenance-download-name: ${{ needs.build.outputs.provenance-download-name }}
-          provenance-download-sha256: ${{ needs.build.outputs.provenance-download-sha256 }}
+          name: ${{ needs.provenance.outputs.package-download-name }}
+          path: "."
+          sha256: ${{ needs.provenance.outputs.package-download-sha256 }}
+
+      - name: Download provenance
+        uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
+        with:
+          name: ${{ needs.provenance.outputs.provenance-download-name }}
+          path: "."
+          sha256: ${{ needs.provenance.outputs.provenance-download-sha256 }}
+
+      - name: Publish the package
+        env:
+          TARBALL_PATH: "./${{ needs.provenance.outputs.package-name }}"
+          PROVENANCE_PATH: "./${{ needs.provenance.outputs.provenance-name }}"
+        run: |
+          ls
+          npm publish "${TARBALL_PATH}" --access=public --provenance-file="${PROVENANCE_PATH}"
+
+      # - name: publish
+      #   id: publish
+      #   uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.7.0
+      #   with:
+      #     access: public
+      #     node-auth-token: ${{ secrets.NPM_TOKEN }}
+      #     package-name: ${{ needs.build.outputs.package-name }}
+      #     package-download-name: ${{ needs.build.outputs.package-download-name }}
+      #     package-download-sha256: ${{ needs.build.outputs.package-download-sha256 }}
+      #     provenance-name: ${{ needs.build.outputs.provenance-name }}
+      #     provenance-download-name: ${{ needs.build.outputs.provenance-download-name }}
+      #     provenance-download-sha256: ${{ needs.build.outputs.provenance-download-sha256 }}
 
       - name: Print outputs
         shell: bash
         env:
           BUILD_OUTPUTS: "${{ toJSON(needs.build.outputs) }}"
-          PUBLISH_OUTPUTS: "${{ toJSON(steps.publish.outputs) }}"
+          # PUBLISH_OUTPUTS: "${{ toJSON(steps.publish.outputs) }}"
         run: |
           echo "build:   ${BUILD_OUTPUTS}"
-          echo "publish: ${PUBLISH_OUTPUTS}"
+          # echo "publish: ${PUBLISH_OUTPUTS}"
