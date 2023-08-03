@@ -35,7 +35,7 @@ jobs:
         uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-package-download@v1.8.0-rc.2
         with:
           name: ${{ needs.build.outputs.package-download-name }}
-          path: "package.tgz"
+          path: ${{ needs.build.outputs.package-name }}
           sha256: ${{ needs.build.outputs.package-download-sha256 }}
 
       - name: Download provenance
@@ -48,7 +48,7 @@ jobs:
 
       - name: Publish the package
         env:
-          TARBALL_PATH: "./package/${{ needs.build.outputs.package-name }}"
+          TARBALL_PATH: "${{ needs.build.outputs.package-name }}"
           PROVENANCE_PATH: "./attestations/${{ needs.build.outputs.provenance-name }}"
         run: |
           ls
