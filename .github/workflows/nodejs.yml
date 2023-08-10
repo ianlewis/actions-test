@@ -13,7 +13,8 @@ jobs:
       id-token: write # For signing
       contents: read # For repo checkout.
       actions: read # For getting workflow run info.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@v1.7.0
+    # uses: slsa-framework/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@v1.8.0
+    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@nodejs-slsa-v10
     with:
       directory: nodejs
       node-version: 16
@@ -30,49 +31,47 @@ jobs:
           node-version: 18
           registry-url: "https://registry.npmjs.org"
 
-      - run: |
-          # Install npm >9.7.0 which includes support for --provenance-file.
-          # This installs locally in the temp directory.
-          npm install -g npm@^9.7.0
+      # - run: |
+      #     # Install npm >9.7.0 which includes support for --provenance-file.
+      #     # This installs locally in the temp directory.
+      #     npm install -g npm@^9.7.0
 
-      - name: Download tarball
-        # uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-package-download@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
-        uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-package-download@v1.8.0-rc.2
-        with:
-          name: ${{ needs.build.outputs.package-download-name }}
-          path: ${{ needs.build.outputs.package-name }}
-          sha256: ${{ needs.build.outputs.package-download-sha256 }}
-
-      - name: Download provenance
-        # uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@e55b76ce421082dfa4b34a6ac3c5e59de0f3bb58 # v1.7.0
-        uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@v1.8.0-rc.2
-        with:
-          name: ${{ needs.build.outputs.provenance-download-name }}
-          path: "attestations"
-          sha256: ${{ needs.build.outputs.provenance-download-sha256 }}
-
-      - name: Publish the package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          TARBALL_PATH: "${{ needs.build.outputs.package-name }}"
-          PROVENANCE_PATH: "./attestations/${{ needs.build.outputs.provenance-name }}"
-        run: |
-          ls -lh attestations
-          echo
-          npm publish "${TARBALL_PATH}" --access=public --provenance-file="${PROVENANCE_PATH}"
-
-      # - name: publish
-      #   id: publish
-      #   uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.7.0
+      # - name: Download tarball
+      #   uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-package-download@v1.8.0
       #   with:
-      #     access: public
-      #     node-auth-token: ${{ secrets.NPM_TOKEN }}
-      #     package-name: ${{ needs.build.outputs.package-name }}
-      #     package-download-name: ${{ needs.build.outputs.package-download-name }}
-      #     package-download-sha256: ${{ needs.build.outputs.package-download-sha256 }}
-      #     provenance-name: ${{ needs.build.outputs.provenance-name }}
-      #     provenance-download-name: ${{ needs.build.outputs.provenance-download-name }}
-      #     provenance-download-sha256: ${{ needs.build.outputs.provenance-download-sha256 }}
+      #     name: ${{ needs.build.outputs.package-download-name }}
+      #     path: ${{ needs.build.outputs.package-name }}
+      #     sha256: ${{ needs.build.outputs.package-download-sha256 }}
+
+      # - name: Download provenance
+      #   uses: slsa-framework/slsa-github-generator/actions/nodejs/secure-attestations-download@v1.8.0
+      #   with:
+      #     name: ${{ needs.build.outputs.provenance-download-name }}
+      #     path: "attestations"
+      #     sha256: ${{ needs.build.outputs.provenance-download-sha256 }}
+
+      # - name: Publish the package
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      #     TARBALL_PATH: "${{ needs.build.outputs.package-name }}"
+      #     PROVENANCE_PATH: "./attestations/${{ needs.build.outputs.provenance-name }}"
+      #   run: |
+      #     ls -lh attestations
+      #     echo
+      #     npm publish "${TARBALL_PATH}" --access=public --provenance-file="${PROVENANCE_PATH}"
+
+      - name: publish
+        id: publish
+        uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.7.0
+        with:
+          access: public
+          node-auth-token: ${{ secrets.NPM_TOKEN }}
+          package-name: ${{ needs.build.outputs.package-name }}
+          package-download-name: ${{ needs.build.outputs.package-download-name }}
+          package-download-sha256: ${{ needs.build.outputs.package-download-sha256 }}
+          provenance-name: ${{ needs.build.outputs.provenance-name }}
+          provenance-download-name: ${{ needs.build.outputs.provenance-download-name }}
+          provenance-download-sha256: ${{ needs.build.outputs.provenance-download-sha256 }}
 
       - name: Print outputs
         shell: bash
