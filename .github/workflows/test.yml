@@ -10,7 +10,9 @@ jobs:
     permissions:
       issues: write
     steps:
-      - run: |
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           url=$(gh issue create --title "Test issue" --body "Test issue")
           echo "${url}"
           gh issue close "${url}"
