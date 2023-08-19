@@ -10,6 +10,7 @@ jobs:
     permissions:
       issues: write
     steps:
+      # TODO(#2): This issue is closed.
       - uses: actions/checkout@v3
       - name: Reopen issues
         uses: ianlewis/todos/actions/issue-reopener@reopener-action
