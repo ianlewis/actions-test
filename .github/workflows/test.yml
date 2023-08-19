@@ -11,6 +11,6 @@ jobs:
       issues: write
     steps:
       - run: |
-          url=$(gh issues create --title "Test issue" --body "Test issue")
+          url=$(gh issue create --title "Test issue" --body "Test issue")
           echo "${url}"
-          gh issues close "${url}"
+          gh issue close "${url}"
