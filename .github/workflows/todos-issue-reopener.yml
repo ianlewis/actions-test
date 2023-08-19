@@ -1,0 +1,15 @@
+name: Issue Reopener
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  issue-reopener:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Reopen issues
+        uses: ianlewis/todos/actions/issue-reopener
