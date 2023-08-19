@@ -1,0 +1,16 @@
+name: Issue Reopener
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - run: |
+          url=$(gh issues create --title "Test issue" --body "Test issue")
+          echo "${url}"
+          gh issues close "${url}"
