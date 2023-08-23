@@ -13,4 +13,5 @@ jobs:
       # TODO(#2): This issue is closed.
       - uses: actions/checkout@v3
       - name: Reopen issues
-        uses: ianlewis/todos/actions/issue-reopener@v0.4.0-rc.2
+        # uses: ianlewis/todos/actions/issue-reopener@v0.4.0-rc.2
+        uses: ianlewis/todos/actions/issue-reopener@fix-reopener-link
