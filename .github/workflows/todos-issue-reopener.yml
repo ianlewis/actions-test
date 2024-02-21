@@ -10,7 +10,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      # TODO(#2): This issue is closed.
+      # TODO(#84949294): This issue doesn't exist.
       - uses: actions/checkout@v3
       - name: Reopen issues
         # uses: ianlewis/todos/actions/issue-reopener@v0.4.0-rc.2
