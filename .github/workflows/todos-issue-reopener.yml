@@ -14,4 +14,4 @@ jobs:
       - uses: actions/checkout@v3
       - name: Reopen issues
         # uses: ianlewis/todos/actions/issue-reopener@v0.4.0-rc.2
-        uses: ianlewis/todos/actions/issue-reopener@fix-reopener-link
+        uses: ianlewis/todo-issue-reopener@v1.1.0
