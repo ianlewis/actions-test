@@ -22,8 +22,6 @@ on:
 jobs:
   vars:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
       - run: |
           echo ${{ vars.REPO_TEST }}
