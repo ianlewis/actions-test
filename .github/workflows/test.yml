@@ -19,4 +19,4 @@ jobs:
   #         gh issue close "${url}"
 
   vars:
-    uses: ianlewis/actions-test/.github/workflows/vars.yml@main
+    uses: ianlewis/actions-test2/.github/workflows/vars.yml@main
