@@ -26,5 +26,5 @@ jobs:
       issues: write
     steps:
       - run: |
-          echo ${{ vars.repo_test }}
-          echo ${{ vars.workflow_test }}
+          echo ${{ vars.REPO_TEST }}
+          echo ${{ vars.WORKFLOW_TEST }}
