@@ -5,15 +5,18 @@ on:
 permissions: read-all
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-    steps:
-      - uses: actions/checkout@v3
-      - env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          url=$(gh issue create --title "Test issue" --body "Test issue")
-          echo "${url}"
-          gh issue close "${url}"
+  # test:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     issues: write
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - env:
+  #         GH_TOKEN: ${{ github.token }}
+  #       run: |
+  #         url=$(gh issue create --title "Test issue" --body "Test issue")
+  #         echo "${url}"
+  #         gh issue close "${url}"
+
+  vars:
+    uses: ianlewis/actions-test/.github/workflows/vars.yml@main
