@@ -1,9 +1,9 @@
 name: Node.js
 on:
   workflow_dispatch:
-  # push:
-  #   tags:
-  #     - "*"
+  push:
+    tags:
+      - "*"
 
 permissions: read-all
 
@@ -14,7 +14,8 @@ jobs:
       contents: read # For repo checkout.
       actions: read # For getting workflow run info.
     # uses: slsa-framework/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@v1.8.0
-    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@nodejs-slsa-v10
+    # uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@nodejs-slsa-v10
+    uses: ianlewis/slsa-github-generator/.github/workflows/builder_nodejs_slsa3.yml@1555-feature-report-variables-in-provenance
     with:
       directory: nodejs
       node-version: 20
@@ -62,7 +63,7 @@ jobs:
 
       - name: publish
         id: publish
-        uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v1.9.0
+        uses: slsa-framework/slsa-github-generator/actions/nodejs/publish@v2.0.0
         with:
           access: public
           node-auth-token: ${{ secrets.NPM_TOKEN }}
