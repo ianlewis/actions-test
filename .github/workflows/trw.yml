@@ -57,7 +57,8 @@ jobs:
     steps:
       - name: Generate the token
         id: generate
-        uses: slsa-framework/slsa-github-generator/actions/delegator/setup-generic@v1.8.0-rc.1
+        # uses: slsa-framework/slsa-github-generator/actions/delegator/setup-generic@
+        uses: ianlewis/slsa-github-generator/actions/delegator/setup-generic@1668-fix-todo
         with:
           slsa-workflow-recipient: "delegator_lowperms-generic_slsa3.yml"
           slsa-runner-label: "ubuntu-latest"
@@ -72,6 +73,6 @@ jobs:
       id-token: write # For signing.
       contents: read # For repo checkout of private repos.
       actions: read # For getting workflow run on private repos.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_lowperms-generic_slsa3.yml@v1.8.0-rc.1
+    uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_lowperms-generic_slsa3.yml@v2.1.0
     with:
       slsa-token: ${{ needs.slsa-setup.outputs.slsa-token }}
